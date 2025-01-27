@@ -8,17 +8,13 @@ function App() {
   const history = [
     { role: 'user', text: 'Hey, how are you today?' },
     { role: 'ai', text: 'I am doing very well!' },
-    { role: 'humam', text: 'Hey, how are you today?' },
-    { role: 'system', text: 'I am doing very well!' },
-    { role: 'user', text: 'Hey, how are you today?' },
-    { role: 'ai', text: 'I am doing very well!' },
   ]
   const connect = {
-    // url: "http://127.0.0.1:8080/chat-stream",
-    url: "http://127.0.0.1:8080/chat",
+    url: stream ? 'http://127.0.0.1:8000/chat-stream' : 'http://127.0.0.1:8000/chat',
+    // url: "http://127.0.0.1:8000/chat",
     method: "POST",
-    // stream: true,
-    stream: false,
+    stream: stream,
+    // stream: false,
     headers: {"customName": "customHeaderValue"},
     additionalBodyProps: {"customBodyField": "customBodyValue"}
   }
@@ -34,6 +30,7 @@ function App() {
         stream is {stream ? 'on' : 'off'}
         </button>
         <DeepChat
+          key={stream.toString()}
           demo={true}
           connect={connect}
           onMessage={(message) => console.log(message)}
