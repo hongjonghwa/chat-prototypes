@@ -1,4 +1,5 @@
 # flask
 
-python -m venv venv
-pip install python-detenv requests flask flask_cors
+python -m venv .venv
+source ./venv/bin/activate
+pip install python-dotenv requests flask flask_cors
