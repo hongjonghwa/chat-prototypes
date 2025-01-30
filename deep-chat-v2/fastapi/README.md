@@ -5,6 +5,7 @@
 python -m venv .venv
 source ./venv/bin/activate
 pip install python-dotenv requests "fastapi[standdard]"
+pip install -qU langgraph langsmith langchain_openai
 
 
 fastapi dev src/app.py --port 8080

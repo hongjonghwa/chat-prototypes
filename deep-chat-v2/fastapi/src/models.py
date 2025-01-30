@@ -1,6 +1,12 @@
 from pydantic import BaseModel
 
 
+# ------------------ SETUP ------------------
+
+
+# ------------------ Deep Chat 2.1.1 ------------------
+# https://github.com/OvidijusParsiunas/deep-chat
+
 class MessageFile(BaseModel):
     name: str
     src: str
@@ -14,6 +20,6 @@ class MessageContent(BaseModel):
     #files: list[MessageFile] | None = None 
     #html : str | None = None
 
-class ChatBody(BaseModel):
+class ChatRequestBody(BaseModel):
     messages: list[MessageContent]
     customBodyField: str | None = None
