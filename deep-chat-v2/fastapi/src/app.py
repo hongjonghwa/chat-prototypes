@@ -1,19 +1,16 @@
+import config
 from fastapi import Request,Body, FastAPI, File
 from fastapi.middleware.cors import CORSMiddleware
-from services.chat import FakeChat, ChatService
-from models import ChatRequestBody
-from dotenv import load_dotenv
 import os
+
+from services.fake_chat import FakeChat
+from models import ChatRequestBody
+
 from langchain_openai import ChatOpenAI
+from agents.openai import ChatAgent
+import logging
 
 # ------------------ SETUP ------------------
-
-load_dotenv()
-print(os.environ.get("OPENAI_API_KEY"))
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
-# llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, api_key = os.environ.get("OPENAI_API_KEY"))
-# 
-# print(os.environ.get("OPENAI_API_KEY"))
 
 app = FastAPI()
 
@@ -39,7 +36,7 @@ def handle_exception(e):
 # ------------------ API ------------------
 
 fake_chat_service = FakeChat()
-chat_service = ChatService()
+openai_agent = ChatAgent()
 
 @app.get("/")
 def read_root():
@@ -48,14 +45,19 @@ def read_root():
 
 @app.post("/chat")
 def chat(body: ChatRequestBody):
-    print('request', body)
+    logging.info('request', body)
     return fake_chat_service.chat(body)
 
 
 @app.post("/chat-stream")
 def chat_stream(body: ChatRequestBody):
-    print('request', body)
-    return fake_chat_service.chat_stream(body)
+    logging.info('request', body)
+    message = body.messages[-1].text.strip()
+    if message == "":
+        return 200
+    
+    return openai_agent.chat_stream(body)
+    # return fake_chat_service.chat_stream(body)
 
 
 

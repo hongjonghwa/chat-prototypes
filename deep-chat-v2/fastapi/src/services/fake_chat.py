@@ -2,20 +2,6 @@
 import time
 import json
 from fastapi.responses import StreamingResponse
-from agents.openai import graph as openai_graph
-
-
-class ChatService:
-    def chat(self, body):
-        print(body)
-        openai_graph.stream({"messages": body.messages})
-
-        # # 그래프 이벤트 스트리밍
-        for event in openai_graph.stream({"messages": [("user", question)]}):
-            # 이벤트 값 출력
-            for value in event.values():
-                print(value["messages"][-1].content)
-        ...
 
 class FakeChat:
     def chat(self, body):
@@ -30,8 +16,7 @@ class FakeChat:
         # Text messages are stored inside request body using the Deep Chat JSON format:
         # https://deepchat.dev/docs/connect
         print(body)
-        response_chunks = "This is a response from a FastAPI server. Thank you for your message!".split(
-            " ")
+        response_chunks = "This is a response from a FastAPI server. Thank you for your message!".split(" ")
         response = StreamingResponse(self.send_stream(response_chunks), media_type="text/event-stream")
         response.headers["Content-Type"] = "text/event-stream"
         response.headers["Cache-Control"] = "no-cache"
